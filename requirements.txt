@@ -1,0 +1,6 @@
+pandas
+os
+numpy
+openai
+flask
+json

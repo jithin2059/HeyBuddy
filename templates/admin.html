@@ -1,0 +1,22 @@
+<!doctype html>
+<html>
+<head>
+    <title>Admin Page</title>
+</head>
+<body>
+    <h1>Welcome, {{ session['username'] }}</h1>
+    <a href="{{ url_for('logout') }}">Logout</a>
+
+    <h2>Unresolved Queries</h2>
+    <ul>
+        {% for query in queries %}
+            <li>{{ query[0] }}</li>
+            <li>{{ query[1] }}</li>
+            <li>{{ query[2] }}</li>
+            <li>{{ query[3] }}</li>
+            <li>{{ query[4] }}</li>
+            <li>{{ query[5] }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

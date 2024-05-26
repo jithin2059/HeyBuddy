@@ -1,0 +1,188 @@
+<!doctype html>
+<html>
+<head>
+    <title>Chat with HeyBuddy</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        .chat-container {
+            width: 400px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .chat-header {
+            padding: 16px;
+            background-color: #007bff;
+            color: white;
+            text-align: center;
+        }
+        .chat-body {
+            padding: 16px;
+            height: 300px;
+            overflow-y: auto;
+        }
+        .message-container {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 10px;
+        }
+        .user-message {
+            background-color: #007bff;
+            color: white;
+            border-radius: 10px;
+            padding: 10px;
+            align-self: flex-end;
+            max-width: 70%;
+        }
+        .bot-message {
+            background-color: #f0f0f0;
+            border-radius: 10px;
+            padding: 10px;
+            align-self: flex-start;
+            max-width: 70%;
+        }
+        .chat-input {
+            padding: 16px;
+            border-top: 1px solid #ddd;
+        }
+        .chat-input input {
+            width: calc(100% - 60px);
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-right: 8px;
+        }
+        .chat-input button {
+            padding: 8px 16px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            padding: 16px;
+        }
+        .action-buttons button {
+            padding: 8px 16px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            Chat with HeyBuddy
+        </div>
+        <div class="chat-body" id="chat-body">
+            <div class="message-container bot-message">
+                Hello! Welcome to HeyBuddy, your go-to assistant for finding information about GITAM (Gandhi Institute of Technology and Management). How can I assist you today? Here are a few popular options you might be interested in:
+                <br><br>
+                1. Admission Process<br>
+                2. Courses Offered<br>
+                3. Campus Facilities<br>
+                4. Fee Structure<br>
+                5. Scholarships and Financial Aid<br>
+                6. Contact Information<br>
+                7. Campus Life and Student Activities<br>
+                8. Faculty and Departments<br><br>
+                Please select an option by typing the corresponding number, or let me know if you have a different query!
+            </div>
+        </div>
+        <div class="chat-input">
+            <input type="text" id="user-query" placeholder="Type your query here...">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+        <div class="action-buttons">
+            <button onclick="markResolved()">Mark as Resolved</button>
+            <button onclick="markUnresolved()">Forward to Admin</button>
+        </div>
+    </div>
+    <script>
+        function sendMessage() {
+            const userQuery = document.getElementById('user-query').value;
+            if (userQuery.trim() === "") return;
+
+            const chatBody = document.getElementById('chat-body');
+
+            // User message
+            const userMessageContainer = document.createElement('div');
+            userMessageContainer.className = 'message-container';
+            const userMessage = document.createElement('div');
+            userMessage.className = 'user-message';
+            userMessage.innerText = userQuery;
+            userMessageContainer.appendChild(userMessage);
+            chatBody.appendChild(userMessageContainer);
+
+            fetch('/chat/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ query: userQuery }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Bot message
+                const botMessageContainer = document.createElement('div');
+                botMessageContainer.className = 'message-container';
+                const botMessage = document.createElement('div');
+                botMessage.className = 'bot-message';
+                botMessage.innerText = data.response;
+                botMessageContainer.appendChild(botMessage);
+                chatBody.appendChild(botMessageContainer);
+
+                chatBody.scrollTop = chatBody.scrollHeight;
+            });
+
+            document.getElementById('user-query').value = "";
+        }
+
+        function markResolved() {
+            fetch('/chat/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ status: 'resolved' }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert('Chat marked as resolved.');
+            });
+        }
+
+        function markUnresolved() {
+            const userQuery = document.getElementById('user-query').value;
+            fetch('/chat/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ query: userQuery, status: 'unresolved' }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.response);
+            });
+        }
+    </script>
+</body>
+</html>
