@@ -2,6 +2,50 @@
 <html>
 <head>
     <title>Admin Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 30px;
+            color: #333;
+        }
+
+        h2 {
+            margin-top: 50px;
+            color: #333;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            background-color: #fff;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        a {
+            display: block;
+            margin-top: 20px;
+            text-align: center;
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
     <h1>Welcome, {{ session['username'] }}</h1>
@@ -10,12 +54,11 @@
     <h2>Unresolved Queries</h2>
     <ul>
         {% for query in queries %}
-            <li>{{ query[0] }}</li>
-            <li>{{ query[1] }}</li>
-            <li>{{ query[2] }}</li>
-            <li>{{ query[3] }}</li>
-            <li>{{ query[4] }}</li>
-            <li>{{ query[5] }}</li>
+            <li>Name: {{ query[1] }}</li>
+            <li>Email: {{ query[2] }}</li>
+            <li>Message: {{ query[3] }}</li>
+            <li>Response: {{ query[4] }}</li>
+            <li>Status: {{ query[5] }}</li>
         {% endfor %}
     </ul>
 </body>
